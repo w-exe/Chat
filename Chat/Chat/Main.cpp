@@ -10,12 +10,13 @@ using namespace std;
 /*The function Client recursively calls the same function
 	until it creates the required number of chat participants*/
 void client(int clients, string path, list<int> times, list<string> messages) {
+
+	int myNum = clients; // the copy of number of clients
+
 	string message = messages.front();
 	messages.pop_front();
 	int time = times.front();
 	times.pop_front();
-
-	int myNum = clients;
 
 	if (clients > 1) {
 		--clients;
@@ -24,14 +25,15 @@ void client(int clients, string path, list<int> times, list<string> messages) {
 	}
 
 	for (int i = 0; i < 10; i++) {
+
 		ofstream fout; // file content
-		SYSTEMTIME st; //system time
-		GetLocalTime(&st);
 
 		/*opens the file for add text to the end of the file*/
 		fout.open(path, ios::app);
 
 		if (fout.is_open()) {
+			SYSTEMTIME st; //system time
+			GetLocalTime(&st);
 			fout << st.wHour << ":" << st.wMinute << ":" << st.wSecond << "; "
 				<< myNum << ": " << message << endl;
 		}
