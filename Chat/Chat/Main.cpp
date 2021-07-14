@@ -7,15 +7,20 @@
 
 using namespace std;
 
-/*Clients imitation*/
-void client(string path, list<int> times, list<string> messages) {
+/*The function Client recursively calls the same function
+	until it creates the required number of chat participants*/
+void client(int clients, string path, list<int> times, list<string> messages) {
 	string message = messages.front();
 	messages.pop_front();
 	int time = times.front();
 	times.pop_front();
 
-	if (false == times.empty()) {
-		client(path, times, messages);
+	int myNum = clients;
+
+	if (clients > 1) {
+		--clients;
+		/*recursion*/
+		client(clients, path, times, messages);
 	}
 
 	for (int i = 0; i < 10; i++) {
@@ -27,19 +32,20 @@ void client(string path, list<int> times, list<string> messages) {
 		fout.open(path, ios::app);
 
 		if (fout.is_open()) {
-			fout << st.wHour << ":" << st.wMinute << ":" << st.wSecond << " " << message << endl;
+			fout << st.wHour << ":" << st.wMinute << ":" << st.wSecond << "; "
+				<< myNum << ": " << message << endl;
 		}
-		
+
 		/*closes the file*/
-		fout.close(); // закрываем файл
+		fout.close();
 
 		Sleep(time);
 	}
 }
 
 int main() {
-	string path = "C:/newfolder/myfile.txt"; // file location and name
-	int clients = 2; // number of clients
+	string path; // file location and name like = "C:/newfolder/myfile.txt"
+	int clients; // number of clients
 	list<int> times = {}; // time delays (in seconds)
 	list<string> messages = {}; // message lines
 	int time;
@@ -51,8 +57,7 @@ int main() {
 	cout << "...number of clients:" << endl;
 	cin >> clients; // EXAMPLE 2
 
-	while (clients > 0) {
-		clients--;
+	for (int c = clients; c > 0; c--) {
 		cout << "...time delay :" << endl;
 		cin >> time; // EXAMPLE 5
 		time = time * 1000;
@@ -62,7 +67,7 @@ int main() {
 		messages.push_back(message);
 	}
 
-	client(path, times, messages);
+	client(clients, path, times, messages);
 
 	return 0;
 }
